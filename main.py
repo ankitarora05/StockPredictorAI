@@ -19,13 +19,7 @@ warnings.filterwarnings("ignore")
 # 0. GLOBAL CONFIG
 # =========================================================
 TICKERS = [
-    "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA",
-    "RELIANCE.NS", "TCS.NS", "INFY.NS", "HDFCBANK.NS", "ICICIBANK.NS",
-    "9984.T", "6758.T", "7203.T", "8306.T",
-    "0700.HK", "9988.HK", "0005.HK",
-    "600036.SS", "600519.SS",
-    "005930.KS", "000660.KS",
-    "D05.SI", "O39.SI"
+    "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"
 ]
 
 MODEL_FILE = "stock_model.joblib"

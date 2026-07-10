@@ -133,7 +133,7 @@ def train_model_thread():
         X_train_scaled = scaler_local.fit_transform(X_train)
         X_test_scaled = scaler_local.transform(X_test)
 
-        model_local = RandomForestRegressor(n_estimators=150, max_depth=15, random_state=42, n_jobs=-1)
+        model_local = RandomForestRegressor(n_estimators=300,max_depth=25,min_samples_split=10,random_state=42,n_jobs=-1)
         model_local.fit(X_train_scaled, y_train)
 
         y_pred = model_local.predict(X_test_scaled)
@@ -716,15 +716,81 @@ async def ui():
             <div class="search-section">
                 <div class="search-box">
                     <select id="exchangeSelect">
-                        <option value="US">🇺🇸 US (NYSE/NASDAQ)</option>
-                        <option value="NSE">🇮🇳 India (NSE)</option>
-                        <option value="BSE">🇮🇳 India (BSE)</option>
-                        <option value="T">🇯🇵 Japan (Tokyo)</option>
-                        <option value="HK">🇭🇰 Hong Kong</option>
-                        <option value="SI">🇸🇬 Singapore</option>
-                        <option value="SS">🇨🇳 China (Shanghai)</option>
-                        <option value="SZ">🇨🇳 China (Shenzhen)</option>
-                        <option value="KS">🇰🇷 South Korea (KOSPI)</option>
+                        <!-- North America -->
+                        <option value="US" data-currency="$">🇺🇸 United States (NYSE/NASDAQ)</option>
+                        <option value="BZX" data-currency="$">🇺🇸 United States (Cboe BZX)</option>
+                        <option value="PNK" data-currency="$">🇺🇸 United States (OTC Pink)</option>
+                        <option value="TO" data-currency="C$">🇨🇦 Canada (Toronto)</option>
+                        <option value="V" data-currency="C$">🇨🇦 Canada (TSX Venture)</option>
+                        <option value="CN" data-currency="C$">🇨🇦 Canada (CSE)</option>
+                        <option value="NE" data-currency="C$">🇨🇦 Canada (NEO Exchange)</option>
+
+                        <!-- South America -->
+                        <option value="SA" data-currency="R$">🇧🇷 Brazil (B3 São Paulo)</option>
+                        <option value="BA" data-currency="AR$">🇦🇷 Argentina (Buenos Aires)</option>
+                        <option value="SN" data-currency="CL$">🇨🇱 Chile (Santiago)</option>
+                        <option value="LM" data-currency="S/">🇵🇪 Peru (Lima)</option>
+                        <option value="MX" data-currency="MX$">🇲🇽 Mexico (Bolsa Mexicana)</option>
+
+                        <!-- Europe -->
+                        <option value="L" data-currency="£">🇬🇧 United Kingdom (London)</option>
+                        <option value="PA" data-currency="€">🇫🇷 France (Euronext Paris)</option>
+                        <option value="AS" data-currency="€">🇳🇱 Netherlands (Euronext Amsterdam)</option>
+                        <option value="BR" data-currency="€">🇧🇪 Belgium (Euronext Brussels)</option>
+                        <option value="LS" data-currency="€">🇵🇹 Portugal (Euronext Lisbon)</option>
+                        <option value="MI" data-currency="€">🇮🇹 Italy (Borsa Italiana)</option>
+                        <option value="DE" data-currency="€">🇩🇪 Germany (Xetra)</option>
+                        <option value="DU" data-currency="€">🇩🇪 Germany (Düsseldorf)</option>
+                        <option value="HM" data-currency="€">🇩🇪 Germany (Hamburg)</option>
+                        <option value="BE" data-currency="€">🇩🇪 Germany (Berlin)</option>
+                        <option value="MU" data-currency="€">🇩🇪 Germany (Munich)</option>
+                        <option value="SG" data-currency="€">🇩🇪 Germany (Stuttgart)</option>
+                        <option value="F" data-currency="€">🇩🇪 Germany (Frankfurt)</option>
+                        <option value="VI" data-currency="€">🇦🇹 Austria (Vienna)</option>
+                        <option value="SW" data-currency="Fr.">🇨🇭 Switzerland (SIX)</option>
+                        <option value="HE" data-currency="€">🇫🇮 Finland (Helsinki)</option>
+                        <option value="ST" data-currency="kr">🇸🇪 Sweden (Stockholm)</option>
+                        <option value="CO" data-currency="kr">🇩🇰 Denmark (Copenhagen)</option>
+                        <option value="OL" data-currency="kr">🇳🇴 Norway (Oslo)</option>
+                        <option value="IC" data-currency="kr">🇮🇸 Iceland (Iceland Stock Exchange)</option>
+                        <option value="WA" data-currency="zł">🇵🇱 Poland (Warsaw)</option>
+                        <option value="PR" data-currency="Kč">🇨🇿 Czech Republic (Prague)</option>
+                        <option value="AT" data-currency="€">🇬🇷 Greece (Athens)</option>
+                        <option value="IR" data-currency="€">🇮🇪 Ireland (Euronext Dublin)</option>
+
+                        <!-- Asia -->
+                        <option value="NS" data-currency="₹">🇮🇳 India (NSE)</option>
+                        <option value="BO" data-currency="₹">🇮🇳 India (BSE)</option>
+                        <option value="T" data-currency="¥">🇯🇵 Japan (Tokyo)</option>
+                        <option value="HK" data-currency="HK$">🇭🇰 Hong Kong (HKEX)</option>
+                        <option value="SS" data-currency="CN¥">🇨🇳 China (Shanghai)</option>
+                        <option value="SZ" data-currency="CN¥">🇨🇳 China (Shenzhen)</option>
+                        <option value="KS" data-currency="₩">🇰🇷 South Korea (KOSPI)</option>
+                        <option value="KQ" data-currency="₩">🇰🇷 South Korea (KOSDAQ)</option>
+                        <option value="TW" data-currency="NT$">🇹🇼 Taiwan (TWSE)</option>
+                        <option value="TWO" data-currency="NT$">🇹🇼 Taiwan (TPEx)</option>
+                        <option value="SI" data-currency="S$">🇸🇬 Singapore (SGX)</option>
+                        <option value="KL" data-currency="RM">🇲🇾 Malaysia (Bursa Malaysia)</option>
+                        <option value="BK" data-currency="฿">🇹🇭 Thailand (SET)</option>
+                        <option value="JK" data-currency="Rp">🇮🇩 Indonesia (IDX)</option>
+                        <option value="VN" data-currency="₫">🇻🇳 Vietnam (Ho Chi Minh)</option>
+                        <option value="PH" data-currency="₱">🇵🇭 Philippines (PSE)</option>
+
+                        <!-- Oceania -->
+                        <option value="AX" data-currency="A$">🇦🇺 Australia (ASX)</option>
+                        <option value="NZ" data-currency="NZ$">🇳🇿 New Zealand (NZX)</option>
+
+                        <!-- Middle East -->
+                        <option value="TA" data-currency="₪">🇮🇱 Israel (Tel Aviv)</option>
+                        <option value="SR" data-currency="﷼">🇸🇦 Saudi Arabia (Tadawul)</option>
+                        <option value="QA" data-currency="QR">🇶🇦 Qatar (QSE)</option>
+                        <option value="KW" data-currency="KD">🇰🇼 Kuwait (Kuwait Stock Exchange)</option>
+                        <option value="DH" data-currency="DH">🇦🇪 UAE (Dubai)</option>
+                        <option value="AD" data-currency="DH">🇦🇪 UAE (Abu Dhabi)</option>
+
+                        <!-- Africa -->
+                        <option value="JO" data-currency="R">🇿🇦 South Africa (Johannesburg)</option>
+                        <option value="CA" data-currency="E£">🇪🇬 Egypt (Cairo)</option>
                     </select>
                     <input type="text" id="symbolInput" placeholder="e.g., AAPL, TSLA" value="AAPL" spellcheck="false">
                     <button id="predictBtn">🔮 Predict</button>
@@ -761,6 +827,7 @@ async def ui():
 
         <script>
             // (same JavaScript as before – unchanged)
+            var selectedCurrency = '';
             const exchangeSelect = document.getElementById('exchangeSelect');
             const symbolInput = document.getElementById('symbolInput');
             const predictBtn = document.getElementById('predictBtn');
@@ -790,6 +857,7 @@ async def ui():
 
             exchangeSelect.addEventListener('change', function() {
                 symbolInput.placeholder = placeholderMap[this.value] || 'Enter symbol';
+                selectedCurrency = this[exchangeSelect.selectedIndex].getAttribute('data-currency');
             });
 
             function setStatus(icon, msg, isError = false) {
@@ -885,12 +953,13 @@ async def ui():
             }
 
             function formatCurrency(value) {
-                return '$' + value.toFixed(2);
+                return selectedCurrency + value.toFixed(2);
             }
 
             function updateUI(data) {
                 stockSymbolSpan.textContent = data.symbol;
                 const exchange = exchangeSelect.value;
+                selectedCurrency = exchangeSelect.options[exchangeSelect.selectedIndex].getAttribute('data-currency');
                 const exchangeName = exchangeSelect.options[exchangeSelect.selectedIndex].text;
                 stockNameSpan.textContent = `(${exchangeName})`;
                 currentPriceSpan.textContent = formatCurrency(data.current_price);
@@ -947,7 +1016,7 @@ async def ui():
                         scales: {
                             y: {
                                 grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-                                ticks: { color: '#8b8fa6', callback: value => '$' + value.toFixed(2) }
+                                ticks: { color: '#8b8fa6', callback: value => selectedCurrency + value.toFixed(2) }
                             },
                             x: {
                                 grid: { display: false },
@@ -961,7 +1030,7 @@ async def ui():
                 resultSection.classList.add('visible');
             }
 
-            async function fetchPrediction(symbol) {
+            async function fetchPrediction(symbol, currency) {
                 clearError();
                 setLoading(true);
                 const exchange = exchangeSelect.value;
@@ -980,7 +1049,7 @@ async def ui():
                     if (!data.predictions || typeof data.predictions !== 'object') {
                         throw new Error('Invalid response format from server.');
                     }
-                    updateUI(data);
+                    updateUI(data, currency);
                 } catch (err) {
                     showError('⚠️ ' + err.message);
                 } finally {
@@ -994,7 +1063,7 @@ async def ui():
                     showError('Please enter a stock symbol.');
                     return;
                 }
-                fetchPrediction(symbol);
+                fetchPrediction(symbol, selectedCurrency);
             });
 
             symbolInput.addEventListener('keydown', (e) => {
@@ -1006,7 +1075,7 @@ async def ui():
                 checkModelStatus();
                 // If model exists, fetch AAPL after a short delay
                 setTimeout(() => {
-                    if (!predictBtn.disabled) fetchPrediction('AAPL');
+                    if (!predictBtn.disabled) fetchPrediction('AAPL', '$');
                 }, 1500);
             });
         </script>
